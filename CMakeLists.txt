@@ -54,6 +54,22 @@ add_executable(${PROJECT_NAME}
     main.cpp
     generated/src/Helper.cpp
     env_fixes.h
+        Bird.h
+        Bird.cpp
+        Obstacle.h
+        Obstacle.cpp
+        Level.h
+        Level.cpp
+        Menu.h
+        Menu.cpp
+        Pipe.h
+        FOREST.h
+        Pipe.cpp
+        FOREST.cpp
+        Spike.cpp
+        Spike.h
+        Exceptions.h
+        game.cpp
 )
 
 include(cmake/CompilerFlags.cmake)
