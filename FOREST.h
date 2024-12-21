@@ -14,7 +14,6 @@ public:
     // Operator de atribuire
     Forest &operator=(Forest other);
 
-    // Virtual methods
     void interact(Bird &bird, bool passed) const override;
 
     void display() const override;

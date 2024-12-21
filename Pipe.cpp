@@ -16,7 +16,6 @@ Pipe &Pipe::operator=(const Pipe &other) {
     return *this;
 }
 
-// Implementarea metodei interact
 void Pipe::interact(Bird &bird, bool passed) const {
     if (!passed) {
         bird.reduce_life(damage);
@@ -31,5 +30,5 @@ void Pipe::display() const {
 }
 
 Obstacle *Pipe::clone() const {
-    return new Pipe(*this); // Returnează o copie a obiectului Pipe curent
+    return new Pipe(*this);
 }

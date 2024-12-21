@@ -1,6 +1,10 @@
 #include "Obstacle.h"
 #include <iostream>
 
+#include "Forest.h"
+#include "Pipe.h"
+#include "Spike.h"
+
 // Constructorul de copiere
 Obstacle::Obstacle(const Obstacle &other) : obstacle(other.obstacle), damage(other.damage) {}
 
@@ -27,11 +31,14 @@ int Obstacle::get_damage() const {
 }
 
 void Obstacle::interact(Bird &bird, bool passed) const {
-    if (!passed) {
-        bird.reduce_life(damage);
-        std::cout << "The bird collided with a " << obstacle << ". Damage: " << damage << std::endl;
+    if (auto* forest = dynamic_cast<const Forest*>(this)) {
+        forest->interact(bird, passed);
+    } else if (auto* pipe = dynamic_cast<const Pipe*>(this)) {
+        pipe->interact(bird, passed);
+    } else if (auto* spike = dynamic_cast<const Spike*>(this)) {
+        spike->interact(bird, passed);
     } else {
-        std::cout << "The bird successfully passed through the " << obstacle << "!" << std::endl;
+        std::cout << "The bird collided with an unknown obstacle." << std::endl;
     }
 }
 

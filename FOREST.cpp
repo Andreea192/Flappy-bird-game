@@ -2,18 +2,17 @@
 #include <iostream>
 #include <algorithm>
 
-// Constructor standard
+// Constructor
 Forest::Forest(int new_damage) : Obstacle("Forest", new_damage), damage(new_damage) {
 }
 
 // Constructor de copiere
 Forest::Forest(const Forest &other) : Obstacle(other), damage(other.damage) {
-    // Aici poți adăuga alte operații de copiere dacă este necesar
 }
 
 // Operator de atribuire
 Forest &Forest::operator=(Forest other) {
-    std::swap(*this, other); // Utilizarea swap-ului pentru a evita auto-atribuirea
+    std::swap(*this, other);
     return *this;
 }
 
@@ -31,5 +30,5 @@ void Forest::display() const {
 }
 
 Obstacle *Forest::clone() const {
-    return new Forest(*this); // Creează o copie a obiectului curent
+    return new Forest(*this);
 }
