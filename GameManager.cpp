@@ -2,13 +2,6 @@
 #include "GameManager.h"
 #include <sstream> // Include necesar pentru std::ostringstream
 
-template <typename T>
-std::string tostring(T value) {
-    std::ostringstream oss;
-    oss << value;
-    return oss.str();
-}
-
 // Inițializarea instanței statice
 GameManager* GameManager::instance = nullptr;
 
@@ -21,7 +14,7 @@ GameManager* GameManager::get_instance() {
 
 void GameManager::set_score(int s) {
     score = s;
-    notify("Score updated: " + tostring(score));
+    notify("Score updated: " + std::to_string(score));
 }
 
 int GameManager::get_score() {
@@ -30,7 +23,7 @@ int GameManager::get_score() {
 
 void GameManager::set_level(int l) {
     level = l;
-    notify("Level updated: " + tostring(level));
+    notify("Level updated: " + std::to_string(level));
 }
 
 int GameManager::get_level() {
