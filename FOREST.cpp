@@ -1,21 +1,14 @@
 #include "FOREST.h"
 #include <iostream>
-#include <algorithm>
 
 template <typename T>
-Forest<T>::Forest(int new_damage) : Obstacle<T>("Forest", new_damage), damage(new_damage) {
-    // Constructor care inițializează atât clasa de bază Obstacle cât și atributul damage
+Forest<T>::Forest(int new_damage) : Obstacle<T>("Forest", new_damage) {
+    // Constructor care inițializează clasa de bază Obstacle
 }
 
 template <typename T>
-Forest<T>::Forest(const Forest<T> &other) : Obstacle<T>(other), damage(other.damage) {
+Forest<T>::Forest(const Forest<T> &other) : Obstacle<T>(other) {
     // Constructor de copiere
-}
-
-template <typename T>
-Forest<T>& Forest<T>::operator=(Forest<T> other) {
-    std::swap(*this, other);  // Swap pentru a implementa operatorul de atribuire
-    return *this;
 }
 
 template <typename T>
@@ -46,3 +39,4 @@ std::ostream &operator<<(std::ostream &os, const Forest<T> &f) {
 
 // Explicit template instantiations
 template class Forest<int>;  // Instanțierea template-ului pentru Forest cu tipul int
+template std::ostream &operator<<(std::ostream &os, const Forest<int> &f);
