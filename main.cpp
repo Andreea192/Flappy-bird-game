@@ -2,27 +2,12 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-//#include <conio.h>
 #include <memory>
 
-#include "Bird.h"
-#include "Exceptions.h"
-#include "Menu.h"
-#include "Level.h"
-#include "Pipe.h"
-#include "Spike.h"
-#include "FOREST.h"
-#include "Factory.h"  // Include Factory.h pentru a folosi ObstacleFactory
-#include "GameManager.h"
-#include "GameManagerObserver.h"  // Include pentru Observer
-
-using Clock = std::chrono::steady_clock;
-using TimePoint = Clock::time_point;
-using Seconds = std::chrono::duration<int>;
 #ifdef _WIN32
 #include <conio.h> // Pentru Windows
 #else
-#include <termios.h> // Pentru macOS și Linux
+#include <termios.h>
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -66,6 +51,22 @@ char getch() {
     return ch;
 }
 #endif
+
+#include "Bird.h"
+#include "Exceptions.h"
+#include "Menu.h"
+#include "Level.h"
+#include "Pipe.h"
+#include "Spike.h"
+#include "Forest.h"
+#include "Factory.h"
+#include "GameManager.h"
+#include "GameManagerObserver.h"
+
+using Clock = std::chrono::steady_clock;
+using TimePoint = Clock::time_point;
+using Seconds = std::chrono::duration<int>;
+
 void wait_for_key_to_continue() {
     std::cout << "Press 'p' to continue..." << std::endl;
     while (true) {
@@ -75,7 +76,7 @@ void wait_for_key_to_continue() {
                 break; // continue the game
             }
         }
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 
@@ -87,7 +88,6 @@ int required_presses(int level, int pipe_index) {
     } else if (level == 3) {
         return 4;
     } else {
-        // levels >= 4
         if (pipe_index % 4 == 0) {
             return 3;
         } else if (pipe_index % 4 == 1 || pipe_index % 4 == 2) {
@@ -112,83 +112,81 @@ int main() {
     ball.setFillColor(sf::Color::Red);
     float positionY = 300;
     ball.setPosition(400, positionY);
-
-    Bird<int> bird1;  // Corectat tipul pentru Bird
+    Bird<int> bird;
     Menu menu;
     menu.display_menu();
 
     int current_level = menu.get_level();
-    [[maybe_unused]] int losses = 0;
+    int losses = 0;
 
-    // Creăm observatorul
     GameManagerObserver observer;
     GameManager* gameManager = GameManager::get_instance();
-
-    // Atașăm observatorul la GameManager
     gameManager->attach(&observer);
 
+    wait_for_key_to_continue();
+
     while (true) {
-        std::cout << "Level " << current_level << ": " << std::endl;
+        std::cout << "Starting Level " << current_level << "..." << std::endl;
 
         try {
-            bird1.reset();
+            bird.reset();
             Level level(current_level);
-
-            // Crearea obstacolelor folosind Factory, cu parametrul de damage
             std::unique_ptr<Obstacle<int>> obstacle1 = ObstacleFactory<int>::create_obstacle("Pipe", 50);
             std::unique_ptr<Obstacle<int>> obstacle2 = ObstacleFactory<int>::create_obstacle("Spike", 30);
             std::unique_ptr<Obstacle<int>> obstacle3 = ObstacleFactory<int>::create_obstacle("Forest", 40);
 
-            while (bird1.is_alive()) {
+            while (bird.is_alive()) {
                 int num_pipes = 2 + (current_level / 2);
+
                 for (int i = 0; i < num_pipes; ++i) {
                     int presses_required = required_presses(current_level, i);
                     std::cout << "Press Enter " << presses_required << " times to pass through pipe " << i + 1 << "." << std::endl;
 
                     int presses_made = 0;
                     TimePoint last_enter_time = Clock::now();
+
                     while (presses_made < presses_required) {
-                        if (kbhit()) {
-                            char c = getch();
-                            if (c == '\r') {
-                                TimePoint current_time = Clock::now();
-                                if (std::chrono::duration_cast<Seconds>(current_time - last_enter_time).count() >= 3) {
-                                    throw BirdLifeException();
-                                }
-
-                                presses_made++;
-                                last_enter_time = current_time;
-                                std::cout << "Press made: " << presses_made << std::endl;
-                            }
-                        }
-
                         TimePoint current_time = Clock::now();
-                        if (std::chrono::duration_cast<Seconds>(current_time - last_enter_time).count() >= 2) {
+
+                        if (std::chrono::duration_cast<Seconds>(current_time - last_enter_time).count() >= 3) {
                             presses_made--;
+                            std::cout << "Presses reduced! Current presses: " << presses_made << std::endl;
                             last_enter_time = current_time;
-                            std::cout << "2 seconds passed! Number of presses reduced: " << presses_made << std::endl;
 
                             if (presses_made < 0) {
                                 throw BirdLifeException();
                             }
                         }
+
+                        if (kbhit()) {
+                            char c = getch();
+                            if (c == '\r') {
+                                presses_made++;
+                                last_enter_time = Clock::now();
+                                std::cout << "Press made: " << presses_made << std::endl;
+                            }
+                        }
                     }
 
-                    bool passed = (presses_made >= presses_required);
-
-                    // Corect utilizarea interacțiunii
-                    obstacle1->interact(bird1, passed);
-                    obstacle2->interact(bird1, passed);
-                    obstacle3->interact(bird1, passed);
-
-                    // Actualizăm GameManager cu noile date
-                    gameManager->set_score(presses_made);
-                    gameManager->set_level(current_level);
+                    obstacle1->interact(bird, presses_made >= presses_required);
+                    obstacle2->interact(bird, presses_made >= presses_required);
+                    obstacle3->interact(bird, presses_made >= presses_required);
                 }
             }
+
+            current_level++;
+            std::cout << "Level complete! Moving to Level " << current_level << "." << std::endl;
+            wait_for_key_to_continue();
+
         } catch (const BirdLifeException&) {
-            std::cout << "Bird's life is in danger!" << std::endl;
+            std::cout << "Bird died! Restarting current level." << std::endl;
             losses++;
+            if (losses >= 3) {
+                std::cout << "3 losses! Restarting at Level 1." << std::endl;
+                current_level = 1;
+                losses = 0;
+            }
+            wait_for_key_to_continue();
         }
     }
 
