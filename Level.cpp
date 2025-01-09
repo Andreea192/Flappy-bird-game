@@ -3,10 +3,11 @@
 #include <iostream>
 
 // Constructor cu parametru pentru dificultate
-Level::Level(int newDifficulty) : difficulty(newDifficulty) {
-    // Crearea unui obstacol implicit de tip Forest
-    obstacle = std::make_unique<Forest<int>>(50);  // Instanțiem un Forest cu o daună de 50
+Level::Level(int newDifficulty)
+    : difficulty(newDifficulty), obstacle(std::make_unique<Forest<int>>(50)) {
+    // Inițializare completă în lista de inițializare
 }
+
 
 // Constructor cu parametri pentru dificultate și obstacol
 Level::Level(int newDifficulty, std::unique_ptr<Obstacle<int>> newObstacle)
@@ -33,7 +34,7 @@ void swap(Level &first, Level &second) noexcept {
 
 void Level::interaction(Bird<int> &bird, bool hasPassed) const {
     if (obstacle) {
-        obstacle->interact(bird, hasPassed);  // Folosim interact cu Bird<int>
+        obstacle->interact(bird, hasPassed);
     }
 }
 
