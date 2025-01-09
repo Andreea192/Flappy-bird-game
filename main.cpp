@@ -115,6 +115,7 @@ int main() {
     Bird<int> bird;
     Menu menu;
     menu.display_menu();
+    std::cout << "Menu instances: " << menu.get_instance_count() << std::endl;
 
     int current_level = menu.get_level();
     int losses = 0;
@@ -180,7 +181,8 @@ int main() {
             if (spike) {
                 spike->interact(bird, true);
             }
-            current_level++;
+            menu.next_level();
+            current_level = menu.get_level();
             std::cout << "Level complete! Moving to Level " << current_level << "." << std::endl;
             gameManager->set_level(current_level); // Actualizează nivelul în GameManager.
             change_bird_speed(bird, 2);
