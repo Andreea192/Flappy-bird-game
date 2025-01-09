@@ -169,8 +169,11 @@ int main() {
                     }
 
                     obstacle1->interact(bird, presses_made >= presses_required);
+                    bird.check_life();
                     obstacle2->interact(bird, presses_made >= presses_required);
+                    bird.check_life();
                     obstacle3->interact(bird, presses_made >= presses_required);
+                    bird.check_life();
                     level.interaction(bird, presses_made >= presses_required);
                 }
             }
@@ -180,7 +183,9 @@ int main() {
             }
             current_level++;
             std::cout << "Level complete! Moving to Level " << current_level << "." << std::endl;
+            change_bird_speed(bird, 2); // Setează viteza la 2 după terminarea nivelului.
             wait_for_key_to_continue();
+
 
         } catch (const BirdLifeException&) {
             std::cout << "Bird died! Restarting current level." << std::endl;
@@ -193,6 +198,6 @@ int main() {
             wait_for_key_to_continue();
         }
     }
-
+    gameManager->detach(&observer);
     return 0;
 }
