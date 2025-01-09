@@ -193,7 +193,8 @@ int main() {
             losses++;
             if (losses >= 3) {
                 std::cout << "3 losses! Restarting at Level 1." << std::endl;
-                current_level = 1;
+                menu.reset_level();
+                current_level = menu.get_level();
                 losses = 0;
             }
             wait_for_key_to_continue();
