@@ -73,10 +73,10 @@ void Bird<T>::adjust_speed(T factor) {
 }
 
 // Funcție prietenă care schimbă viteza păsării
-template <typename U>
-void change_bird_speed(Bird<U>& bird, U new_speed) {
-    bird.speed = new_speed;
-    std::cout << "The bird's speed has been changed to: " << bird.speed << std::endl;
+template <typename T>
+void change_bird_speed(Bird<T>& bird, T new_speed) {
+    bird.adjust_speed(new_speed);
+    std::cout << "Bird speed changed to: " << new_speed << std::endl;
 }
 
 // Specializarea funcției pentru tipul int (sau orice alt tip dorit)
