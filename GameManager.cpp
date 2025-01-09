@@ -4,7 +4,7 @@
 // Inițializarea instanței statice
 GameManager* GameManager::instance = nullptr;
 
-GameManager* GameManager::get_instance() {e
+GameManager* GameManager::get_instance() {
     if (instance == nullptr) {
         instance = new GameManager();
     }

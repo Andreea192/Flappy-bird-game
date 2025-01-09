@@ -2,7 +2,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include <conio.h>
+//#include <conio.h>
 #include <memory>
 
 #include "Bird.h"
@@ -19,12 +19,58 @@
 using Clock = std::chrono::steady_clock;
 using TimePoint = Clock::time_point;
 using Seconds = std::chrono::duration<int>;
+#ifdef _WIN32
+#include <conio.h> // Pentru Windows
+#else
+#include <termios.h> // Pentru macOS și Linux
+#include <unistd.h>
+#include <fcntl.h>
 
+int kbhit() {
+    struct termios oldt, newt;
+    int ch;
+    int oldf;
+
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+    ch = getchar();
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+    if (ch != EOF) {
+        ungetc(ch, stdin);
+        return 1;
+    }
+
+    return 0;
+}
+
+char getch() {
+    struct termios oldt, newt;
+    char ch;
+
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    ch = getchar();
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return ch;
+}
+#endif
 void wait_for_key_to_continue() {
     std::cout << "Press 'p' to continue..." << std::endl;
     while (true) {
-        if (_kbhit()) {
-            char c = _getch();
+        if (kbhit()) {
+            char c = getch();
             if (c == 'p') {
                 break; // continue the game
             }
