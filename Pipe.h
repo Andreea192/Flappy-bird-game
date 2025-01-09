@@ -6,8 +6,8 @@
 template <typename T>
 class Pipe : public Obstacle<T> {
 public:
-    // Constructor
-    Pipe(int new_damage = 100);
+    // Constructor explicit
+    explicit Pipe(int new_damage = 100);
 
     // Copy Constructor
     Pipe(const Pipe<T>& other);

@@ -4,12 +4,11 @@
 #include "Obstacle.h"
 #include "Bird.h" // Include Bird.h pentru a putea folosi Bird în interacțiune
 
-// Clasa Spike moștenește Obstacle<int>
 template <typename T>
-class Spike : public Obstacle<T> {  // Specifică tipul template-ului
+class Spike : public Obstacle<T> {
 public:
-    // Constructor
-    Spike(int new_damage = 200);
+    // Constructor explicit
+    explicit Spike(int new_damage = 200);
 
     // Constructor de copiere
     Spike(const Spike<T> &other);
