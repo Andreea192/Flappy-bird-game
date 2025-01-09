@@ -98,21 +98,21 @@ int required_presses(int level, int pipe_index) {
     }
 }
 
-int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Ball Game");
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-    }
+// Funție pentru schimbarea vitezei păsării
+template <typename T>
+void change_bird_speed(Bird<T>& bird, T new_speed) {
+    bird.adjust_speed(new_speed);
+    std::cout << "Bird speed changed to: " << new_speed << std::endl;
+}
 
+int main() {
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Flappy Bird Game");
     sf::CircleShape ball(20);
     ball.setFillColor(sf::Color::Red);
     float positionY = 300;
     ball.setPosition(400, positionY);
-    Bird<int> bird;
+
+    Bird<int> bird(100); // Creează o pasăre cu viață inițială
     Menu menu;
     menu.display_menu();
 
@@ -125,9 +125,7 @@ int main() {
 
     wait_for_key_to_continue();
 
-    while (true) {
-        std::cout << "Starting Level " << current_level << "..." << std::endl;
-
+    while (window.isOpen()) {
         try {
             bird.reset();
             Level level(current_level);
@@ -168,16 +166,18 @@ int main() {
                         }
                     }
 
+                    // Verificare viață pasăre
+                    bird.check_life();
+
                     obstacle1->interact(bird, presses_made >= presses_required);
                     obstacle2->interact(bird, presses_made >= presses_required);
                     obstacle3->interact(bird, presses_made >= presses_required);
-                    level.interaction(bird, presses_made >= presses_required);
                 }
             }
-            Spike<int>* spike = level.getSpike();
-            if (spike) {
-                spike->interact(bird, true);
-            }
+
+            // Creșterea vitezei păsării după nivel complet
+            change_bird_speed(bird, 2);
+
             current_level++;
             std::cout << "Level complete! Moving to Level " << current_level << "." << std::endl;
             wait_for_key_to_continue();
