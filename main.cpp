@@ -179,7 +179,8 @@ int main() {
                         }
                     }
 
-                    bird.adjust_speed(1); // Ajustare viteză pasăre
+                    bird.adjust_speed(1);
+                    change_bird_speed(bird, 15);
                     obstacle1->interact(bird, presses_made >= presses_required);
                 }
             }
@@ -189,6 +190,7 @@ int main() {
             gameManager->set_score(current_level * 100); // Actualizare scor
             menu.next_level(); // Utilizare funcția next_level
             std::cout << "Level complete! Moving to Level " << current_level << "." << std::endl;
+            std::cout << "Current score: " << gameManager->get_score() << std::endl;
             wait_for_key_to_continue();
 
         } catch (const BirdLifeException&) {
@@ -203,6 +205,6 @@ int main() {
             wait_for_key_to_continue();
         }
     }
-
+    gameManager->detach(&observer);
     return 0;
 }
