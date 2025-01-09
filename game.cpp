@@ -4,7 +4,7 @@
 class Bird {
 public:
     // Constructor
-    Bird(int initial_height) {
+    explicit Bird(int initial_height) {
         if (initial_height < 0) {
             throw InvalidValueException();
         }
