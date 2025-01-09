@@ -11,7 +11,7 @@
 #include "Level.h"
 #include "Pipe.h"
 #include "Spike.h"
-#include "Forest.h"
+#include "FOREST.h"
 #include "Factory.h"  // Include Factory.h pentru a folosi ObstacleFactory
 #include "GameManager.h"
 #include "GameManagerObserver.h"  // Include pentru Observer
@@ -148,8 +148,8 @@ int main() {
                     int presses_made = 0;
                     TimePoint last_enter_time = Clock::now();
                     while (presses_made < presses_required) {
-                        if (_kbhit()) {
-                            char c = _getch();
+                        if (kbhit()) {
+                            char c = getch();
                             if (c == '\r') {
                                 TimePoint current_time = Clock::now();
                                 if (std::chrono::duration_cast<Seconds>(current_time - last_enter_time).count() >= 3) {

@@ -1,7 +1,7 @@
 #include "Obstacle.h"
 #include <iostream>
 
-#include "Forest.h"
+#include "FOREST.h"
 #include "Pipe.h"
 #include "Spike.h"
 

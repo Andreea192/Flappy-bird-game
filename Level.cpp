@@ -1,5 +1,5 @@
 #include "Level.h"
-#include "Forest.h"
+#include "FOREST.h"
 #include <iostream>
 
 // Constructor cu parametru pentru dificultate
