@@ -1,4 +1,4 @@
-#include "Forest.h"
+#include "FOREST.h"
 #include <iostream>
 #include <algorithm>
 
