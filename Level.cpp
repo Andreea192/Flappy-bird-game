@@ -5,7 +5,7 @@
 // Constructor cu parametru pentru dificultate
 Level::Level(int newDifficulty)
     : difficulty(newDifficulty), obstacle(std::make_unique<Forest<int>>(50)) {
-    // Inițializare completă în lista de inițializare
+
 }
 
 

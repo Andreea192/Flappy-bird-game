@@ -46,6 +46,15 @@ if(APPLE)
 elseif(UNIX)
     find_package(X11)
 endif()
+find_program(CPPCHECK cppcheck)
+
+if(CPPCHECK)
+    set(CPPCHECK_CMD ${CPPCHECK} --enable=all --check-level=exhaustive --inline-suppr --std=c++23)
+    add_custom_target(run_cppcheck
+            COMMAND ${CPPCHECK_CMD} ${CMAKE_SOURCE_DIR}/main.cpp
+            COMMENT "Running Cppcheck on main.cpp"
+    )
+endif()
 
 ###############################################################################
 
