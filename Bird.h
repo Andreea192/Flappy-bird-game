@@ -1,30 +1,53 @@
 #ifndef BIRD_H
 #define BIRD_H
 
-#include <ostream>
+#include <iostream>
+#include <stdexcept>
 
+template <typename T>
 class Bird {
-    int life;
-
 public:
-    Bird(); // Constructor implicit
-    Bird(const Bird &other); // Constructor de copiere
-    Bird &operator=(const Bird &other); // Operator de atribuire
-    ~Bird() = default; // Destructor implicit
+    // Constructor implicit
+    Bird();
 
-    void reduce_life(int value);
+    // Constructor cu parametri
+    Bird(int life, T speed);
 
+    // Constructor de copiere
+    Bird(const Bird<T>& other);
+
+    // Operator de atribuire
+    Bird<T>& operator=(const Bird<T>& other);
+
+    // Metoda pentru a reduce viața
+    void reduce_life(T value);
+
+    // Metoda pentru a reseta viața și viteza
     void reset();
 
-    [[nodiscard]] bool is_alive() const;
+    // Verifică dacă pasărea este vie
+    bool is_alive() const;
 
+    // Afișează starea păsării
     void display() const;
 
-    void interact() const;
-
+    // Verifică viața păsării
     void check_life() const;
 
-    friend std::ostream &operator<<(std::ostream &os, const Bird &b);
+    // Ajustează viteza
+    void adjust_speed(T factor);
+
+    // Funcție prietenă care poate modifica obiecte de tip Bird
+    template <typename U>
+    friend void change_bird_speed(Bird<U>& bird, U new_speed);
+
+private:
+    int life;
+    T speed; // Atribut de tip T care depinde de tipul șablonului
 };
+
+// Funcție șablon prietenă
+template <typename U>
+void change_bird_speed(Bird<U>& bird, U new_speed);
 
 #endif // BIRD_H

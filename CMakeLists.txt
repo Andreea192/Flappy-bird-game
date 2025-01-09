@@ -70,6 +70,14 @@ add_executable(${PROJECT_NAME}
         Spike.h
         Exceptions.h
         game.cpp
+        GameManager.h
+        Factory.h
+        GameManager.cpp
+        Factory.cpp
+        ObstacleFactory.h
+        Observer.h
+        Observer.cpp
+        GameManagerObserver.h
 )
 
 include(cmake/CompilerFlags.cmake)

@@ -5,11 +5,11 @@
 // Constructor cu parametru pentru dificultate
 Level::Level(int newDifficulty) : difficulty(newDifficulty) {
     // Crearea unui obstacol implicit de tip Forest
-    obstacle = std::make_unique<Forest>();
+    obstacle = std::make_unique<Forest<int>>(50);  // Instanțiem un Forest cu o daună de 50
 }
 
 // Constructor cu parametri pentru dificultate și obstacol
-Level::Level(int newDifficulty, std::unique_ptr<Obstacle> newObstacle)
+Level::Level(int newDifficulty, std::unique_ptr<Obstacle<int>> newObstacle)
     : difficulty(newDifficulty), obstacle(std::move(newObstacle)) {
 }
 
@@ -31,9 +31,9 @@ void swap(Level &first, Level &second) noexcept {
     swap(first.obstacle, second.obstacle);
 }
 
-void Level::interaction(Bird &bird, bool hasPassed) const {
+void Level::interaction(Bird<int> &bird, bool hasPassed) const {
     if (obstacle) {
-        obstacle->interact(bird, hasPassed);
+        obstacle->interact(bird, hasPassed);  // Folosim interact cu Bird<int>
     }
 }
 
@@ -45,8 +45,8 @@ void Level::display() const {
     std::cout << std::endl;
 }
 
-Spike *Level::getSpike() const {
-    return dynamic_cast<Spike *>(obstacle.get());
+Spike<int>* Level::getSpike() const {
+    return dynamic_cast<Spike<int>*>(obstacle.get());  // Returnează un pointer la Spike dacă este cazul
 }
 
 std::ostream &operator<<(std::ostream &os, const Level &level) {

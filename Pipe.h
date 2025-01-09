@@ -3,22 +3,22 @@
 
 #include "Obstacle.h"
 
-class Pipe : public Obstacle {
+template <typename T>
+class Pipe : public Obstacle<T> {
 public:
     // Constructor
     Pipe(int new_damage = 100);
 
-    // Constructor de copiere
-    Pipe(const Pipe &other);
+    // Copy Constructor
+    Pipe(const Pipe<T>& other);
 
-    // Operator de atribuire
-    Pipe &operator=(const Pipe &other);
+    // Assignment Operator
+    Pipe<T>& operator=(const Pipe<T>& other);
 
-    void interact(Bird &bird, bool passed) const override;
-
+    // Member functions
+    void interact(Bird<T>& bird, bool passed) const override;
     void display() const override;
-
-    Obstacle *clone() const override;
+    Obstacle<T>* clone() const override;
 };
 
 #endif // PIPE_H

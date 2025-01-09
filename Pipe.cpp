@@ -1,34 +1,39 @@
 #include "Pipe.h"
 #include <iostream>
 
-// Constructor
-Pipe::Pipe(int new_damage) : Obstacle("Pipe", new_damage) {
-}
+template <typename T>
+Pipe<T>::Pipe(int new_damage) : Obstacle<T>("Pipe", new_damage) {}
 
-// Constructor de copiere
-Pipe::Pipe(const Pipe &other) : Obstacle(other) {}
+template <typename T>
+Pipe<T>::Pipe(const Pipe<T> &other) : Obstacle<T>(other) {}
 
-// Operatorul de atribuire
-Pipe &Pipe::operator=(const Pipe &other) {
+template <typename T>
+Pipe<T>& Pipe<T>::operator=(const Pipe<T> &other) {
     if (this != &other) {
-        Obstacle::operator=(other);
+        Obstacle<T>::operator=(other);
     }
     return *this;
 }
 
-void Pipe::interact(Bird &bird, bool passed) const {
+template <typename T>
+void Pipe<T>::interact(Bird<T> &bird, bool passed) const {
     if (!passed) {
-        bird.reduce_life(damage);
-        std::cout << "The bird collided with a Pipe. Damage: " << damage << std::endl;
+        bird.reduce_life(this->get_damage());  // Apelăm get_damage() din clasa de bază
+        std::cout << "The bird collided with a Pipe. Damage: " << this->get_damage() << std::endl;
     } else {
         std::cout << "The bird successfully passed through the Pipe!" << std::endl;
     }
 }
 
-void Pipe::display() const {
-    std::cout << "Pipe [Damage: " << damage << "]" << std::endl;
+template <typename T>
+void Pipe<T>::display() const {
+    std::cout << "Pipe obstacle with " << this->get_damage() << " damage." << std::endl;
 }
 
-Obstacle *Pipe::clone() const {
-    return new Pipe(*this);
+template <typename T>
+Obstacle<T>* Pipe<T>::clone() const {
+    return new Pipe<T>(*this);
 }
+
+// Explicit template instantiation
+template class Pipe<int>;  // Instanțierea template-ului pentru tipul int

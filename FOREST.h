@@ -2,28 +2,34 @@
 #define FOREST_H
 
 #include "Obstacle.h"
+#include "Bird.h"
 
-class Forest : public Obstacle {
+template <typename T>
+class Forest : public Obstacle<T> {
 public:
     // Constructor
     Forest(int new_damage = 50);
 
     // Constructor de copiere
-    Forest(const Forest &other);
+    Forest(const Forest<T> &other);
 
     // Operator de atribuire
-    Forest &operator=(Forest other);
+    Forest<T>& operator=(Forest<T> other);
 
-    void interact(Bird &bird, bool passed) const override;
+    // Funcție pentru interacțiunea cu pasărea
+    void interact(Bird<T> &bird, bool passed) const override;
 
+    // Funcție pentru a afișa detalii despre forest
     void display() const override;
 
-    Obstacle *clone() const override;
+    // Funcție pentru a crea o copie a forest
+    Obstacle<T> *clone() const override;
 
-    int damage;
+private:
+    int damage;  // Dauna specifică pentru acest tip de obstacol
 };
 
-// Output operator pentru Forest
-std::ostream &operator<<(std::ostream &os, const Forest &f);
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const Forest<T> &f);
 
 #endif // FOREST_H
