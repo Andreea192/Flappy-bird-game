@@ -186,7 +186,7 @@ int main() {
                     gameManager->set_level(current_level);
                 }
             }
-        } catch (const BirdLifeException& e) {
+        } catch (const BirdLifeException&) {
             std::cout << "Bird's life is in danger!" << std::endl;
             losses++;
         }
