@@ -171,9 +171,13 @@ int main() {
                     obstacle1->interact(bird, presses_made >= presses_required);
                     obstacle2->interact(bird, presses_made >= presses_required);
                     obstacle3->interact(bird, presses_made >= presses_required);
+                    level.interaction(bird, presses_made >= presses_required);
                 }
             }
-
+            Spike<int>* spike = level.getSpike();
+            if (spike) {
+                spike->interact(bird, true);
+            }
             current_level++;
             std::cout << "Level complete! Moving to Level " << current_level << "." << std::endl;
             wait_for_key_to_continue();
