@@ -167,11 +167,13 @@ int main() {
                             }
                         }
                     }
-
                     obstacle1->interact(bird, presses_made >= presses_required);
                     obstacle2->interact(bird, presses_made >= presses_required);
                     obstacle3->interact(bird, presses_made >= presses_required);
                     level.interaction(bird, presses_made >= presses_required);
+                    bird.check_life();
+                    gameManager->set_score(presses_made); // Setează scorul.
+                    std::cout << "Current score: " << gameManager->get_score() << std::endl;
                 }
             }
             Spike<int>* spike = level.getSpike();
@@ -180,6 +182,8 @@ int main() {
             }
             current_level++;
             std::cout << "Level complete! Moving to Level " << current_level << "." << std::endl;
+            gameManager->set_level(current_level); // Actualizează nivelul în GameManager.
+            change_bird_speed(bird, 2);
             wait_for_key_to_continue();
 
         } catch (const BirdLifeException&) {

@@ -47,7 +47,10 @@ private:
 };
 
 // Funcție șablon prietenă
-template <typename U>
-void change_bird_speed(Bird<U>& bird, U new_speed);
+template <typename T>
+void change_bird_speed(Bird<T>& bird, T new_speed) {
+    bird.adjust_speed(new_speed);
+    std::cout << "Bird speed changed to: " << new_speed << std::endl;
+}
 
 #endif // BIRD_H
