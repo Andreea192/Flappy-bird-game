@@ -5,7 +5,7 @@
 #include <memory>
 
 #ifdef _WIN32
-#include <conio.h> // Pentru Windows
+#include <conio.h>
 #else
 #include <termios.h>
 #include <unistd.h>
@@ -73,7 +73,7 @@ void wait_for_key_to_continue() {
         if (kbhit()) {
             char c = getch();
             if (c == 'p') {
-                break; // continue the game
+                break;
             }
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -105,7 +105,7 @@ int main() {
     float bird_y = 300;
     bird_shape.setPosition(400, bird_y);
 
-    Bird<int> bird(100,5); // Pasărea începe cu viață 100
+    Bird<int> bird(100, 5); // Pasărea începe cu viața 100 și viteza 5
     Menu menu;
     menu.display_menu();
 
@@ -128,7 +128,17 @@ int main() {
         try {
             bird.reset();
             Level level(current_level);
-            level.interaction(bird, true); // Exemplar: Verificare interacțiune
+
+            // Exemplu: Utilizare funcția getSpike
+            Spike<int>* spike = level.getSpike();
+            if (spike) {
+                spike->interact(bird, false);
+            }
+
+            // Exemplu: Utilizare get_instance_count
+            std::cout << "Number of menu instances: " << Menu::get_instance_count() << std::endl;
+
+            level.interaction(bird, true);
 
             // Simulare obstacole
             std::unique_ptr<Obstacle<int>> obstacle1 = ObstacleFactory<int>::create_obstacle("Pipe", 50);
@@ -177,6 +187,7 @@ int main() {
             current_level++;
             gameManager->set_level(current_level); // Actualizare nivel
             gameManager->set_score(current_level * 100); // Actualizare scor
+            menu.next_level(); // Utilizare funcția next_level
             std::cout << "Level complete! Moving to Level " << current_level << "." << std::endl;
             wait_for_key_to_continue();
 
