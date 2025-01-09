@@ -5,7 +5,7 @@
 #include <memory>
 
 #ifdef _WIN32
-#include <conio.h>
+#include <conio.h> // Pentru Windows
 #else
 #include <termios.h>
 #include <unistd.h>
@@ -58,7 +58,7 @@ char getch() {
 #include "Level.h"
 #include "Pipe.h"
 #include "Spike.h"
-#include "FOREST.h"
+#include "Forest.h"
 #include "Factory.h"
 #include "GameManager.h"
 #include "GameManagerObserver.h"
@@ -73,7 +73,7 @@ void wait_for_key_to_continue() {
         if (kbhit()) {
             char c = getch();
             if (c == 'p') {
-                break;
+                break; // continue the game
             }
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -99,13 +99,20 @@ int required_presses(int level, int pipe_index) {
 }
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Flappy Bird Game");
-    sf::CircleShape bird_shape(20);
-    bird_shape.setFillColor(sf::Color::Yellow);
-    float bird_y = 300;
-    bird_shape.setPosition(400, bird_y);
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Ball Game");
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+    }
 
-    Bird<int> bird(100, 5); // Pasărea începe cu viața 100 și viteza 5
+    sf::CircleShape ball(20);
+    ball.setFillColor(sf::Color::Red);
+    float positionY = 300;
+    ball.setPosition(400, positionY);
+    Bird<int> bird;
     Menu menu;
     menu.display_menu();
 
@@ -118,29 +125,12 @@ int main() {
 
     wait_for_key_to_continue();
 
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+    while (true) {
+        std::cout << "Starting Level " << current_level << "..." << std::endl;
 
         try {
             bird.reset();
             Level level(current_level);
-
-            // Exemplu: Utilizare funcția getSpike
-            Spike<int>* spike = level.getSpike();
-            if (spike) {
-                spike->interact(bird, false);
-            }
-
-            // Exemplu: Utilizare get_instance_count
-            std::cout << "Number of menu instances: " << Menu::get_instance_count() << std::endl;
-
-            level.interaction(bird, true);
-
-            // Simulare obstacole
             std::unique_ptr<Obstacle<int>> obstacle1 = ObstacleFactory<int>::create_obstacle("Pipe", 50);
             std::unique_ptr<Obstacle<int>> obstacle2 = ObstacleFactory<int>::create_obstacle("Spike", 30);
             std::unique_ptr<Obstacle<int>> obstacle3 = ObstacleFactory<int>::create_obstacle("Forest", 40);
@@ -150,7 +140,7 @@ int main() {
 
                 for (int i = 0; i < num_pipes; ++i) {
                     int presses_required = required_presses(current_level, i);
-                    std::cout << "Press Enter " << presses_required << " times to pass pipe " << i + 1 << "." << std::endl;
+                    std::cout << "Press Enter " << presses_required << " times to pass through pipe " << i + 1 << "." << std::endl;
 
                     int presses_made = 0;
                     TimePoint last_enter_time = Clock::now();
@@ -164,7 +154,6 @@ int main() {
                             last_enter_time = current_time;
 
                             if (presses_made < 0) {
-                                bird.check_life(); // Verificare viață pasăre
                                 throw BirdLifeException();
                             }
                         }
@@ -179,18 +168,14 @@ int main() {
                         }
                     }
 
-                    bird.adjust_speed(1);
-                    change_bird_speed(bird, 15);
                     obstacle1->interact(bird, presses_made >= presses_required);
+                    obstacle2->interact(bird, presses_made >= presses_required);
+                    obstacle3->interact(bird, presses_made >= presses_required);
                 }
             }
 
             current_level++;
-            gameManager->set_level(current_level); // Actualizare nivel
-            gameManager->set_score(current_level * 100); // Actualizare scor
-            menu.next_level(); // Utilizare funcția next_level
             std::cout << "Level complete! Moving to Level " << current_level << "." << std::endl;
-            std::cout << "Current score: " << gameManager->get_score() << std::endl;
             wait_for_key_to_continue();
 
         } catch (const BirdLifeException&) {
@@ -200,11 +185,10 @@ int main() {
                 std::cout << "3 losses! Restarting at Level 1." << std::endl;
                 current_level = 1;
                 losses = 0;
-                menu.reset_level(); // Resetare nivel
             }
             wait_for_key_to_continue();
         }
     }
-    gameManager->detach(&observer);
+
     return 0;
 }
