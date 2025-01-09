@@ -99,20 +99,13 @@ int required_presses(int level, int pipe_index) {
 }
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Ball Game");
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-    }
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Flappy Bird Game");
+    sf::CircleShape bird_shape(20);
+    bird_shape.setFillColor(sf::Color::Yellow);
+    float bird_y = 300;
+    bird_shape.setPosition(400, bird_y);
 
-    sf::CircleShape ball(20);
-    ball.setFillColor(sf::Color::Red);
-    float positionY = 300;
-    ball.setPosition(400, positionY);
-    Bird<int> bird;
+    Bird<int> bird(100,5); // Pasărea începe cu viață 100
     Menu menu;
     menu.display_menu();
 
@@ -125,12 +118,19 @@ int main() {
 
     wait_for_key_to_continue();
 
-    while (true) {
-        std::cout << "Starting Level " << current_level << "..." << std::endl;
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
 
         try {
             bird.reset();
             Level level(current_level);
+            level.interaction(bird, true); // Exemplar: Verificare interacțiune
+
+            // Simulare obstacole
             std::unique_ptr<Obstacle<int>> obstacle1 = ObstacleFactory<int>::create_obstacle("Pipe", 50);
             std::unique_ptr<Obstacle<int>> obstacle2 = ObstacleFactory<int>::create_obstacle("Spike", 30);
             std::unique_ptr<Obstacle<int>> obstacle3 = ObstacleFactory<int>::create_obstacle("Forest", 40);
@@ -140,7 +140,7 @@ int main() {
 
                 for (int i = 0; i < num_pipes; ++i) {
                     int presses_required = required_presses(current_level, i);
-                    std::cout << "Press Enter " << presses_required << " times to pass through pipe " << i + 1 << "." << std::endl;
+                    std::cout << "Press Enter " << presses_required << " times to pass pipe " << i + 1 << "." << std::endl;
 
                     int presses_made = 0;
                     TimePoint last_enter_time = Clock::now();
@@ -154,6 +154,7 @@ int main() {
                             last_enter_time = current_time;
 
                             if (presses_made < 0) {
+                                bird.check_life(); // Verificare viață pasăre
                                 throw BirdLifeException();
                             }
                         }
@@ -168,13 +169,14 @@ int main() {
                         }
                     }
 
+                    bird.adjust_speed(1.1); // Ajustare viteză pasăre
                     obstacle1->interact(bird, presses_made >= presses_required);
-                    obstacle2->interact(bird, presses_made >= presses_required);
-                    obstacle3->interact(bird, presses_made >= presses_required);
                 }
             }
 
             current_level++;
+            gameManager->set_level(current_level); // Actualizare nivel
+            gameManager->set_score(current_level * 100); // Actualizare scor
             std::cout << "Level complete! Moving to Level " << current_level << "." << std::endl;
             wait_for_key_to_continue();
 
@@ -185,6 +187,7 @@ int main() {
                 std::cout << "3 losses! Restarting at Level 1." << std::endl;
                 current_level = 1;
                 losses = 0;
+                menu.reset_level(); // Resetare nivel
             }
             wait_for_key_to_continue();
         }
