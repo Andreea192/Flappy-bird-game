@@ -169,7 +169,7 @@ int main() {
                         }
                     }
 
-                    bird.adjust_speed(1.1); // Ajustare viteză pasăre
+                    bird.adjust_speed(1); // Ajustare viteză pasăre
                     obstacle1->interact(bird, presses_made >= presses_required);
                 }
             }
