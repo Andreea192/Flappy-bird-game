@@ -58,7 +58,7 @@ char getch() {
 #include "Level.h"
 #include "Pipe.h"
 #include "Spike.h"
-#include "Forest.h"
+#include "FOREST.h"
 #include "Factory.h"
 #include "GameManager.h"
 #include "GameManagerObserver.h"
