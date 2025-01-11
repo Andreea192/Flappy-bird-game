@@ -1,6 +1,8 @@
 #include "Exceptions.h"
 #include <iostream>
 
+#include "Exceptions.h"
+
 class Bird {
 public:
     // Constructor
@@ -27,7 +29,7 @@ public:
     }
 
     // Funcție pentru zbor
-    void fly() {
+    [[maybe_unused]] void fly() {
         if (height <= 0) {
             throw ImpossibleOperationException();
         }
@@ -36,7 +38,7 @@ public:
     }
 
     // Funcție pentru cădere
-    void fall() {
+    [[maybe_unused]]  void fall() {
         if (height <= 0) {
             throw ImpossibleOperationException();
         }
