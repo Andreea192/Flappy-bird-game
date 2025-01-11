@@ -189,8 +189,8 @@ int main() {
             change_bird_speed(bird, 2);
             wait_for_key_to_continue();
 
-        } catch (const BirdLifeException&) {
-            std::cout << "Bird died! Restarting current level." << std::endl;
+        } catch (const BirdLifeException& e) {
+            std::cout << "Bird died! Restarting current level." << e.what() << std::endl;
             losses++;
             if (losses >= 3) {
                 std::cout << "3 losses! Restarting at Level 1." << std::endl;
