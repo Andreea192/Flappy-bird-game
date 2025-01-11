@@ -29,7 +29,7 @@ public:
     }
 
     // Funcție pentru zbor
-    void fly() {
+    /*void fly() {
         if (height <= 0) {
             throw ImpossibleOperationException();
         }
@@ -38,7 +38,7 @@ public:
     }
 
     // Funcție pentru cădere
-    /*void fall() {
+    void fall() {
         if (height <= 0) {
             throw ImpossibleOperationException();
         }
