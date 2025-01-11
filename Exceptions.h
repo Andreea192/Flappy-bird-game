@@ -1,6 +1,6 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
-/*
+
 #include <exception>
 
 class BaseException : public std::exception {
@@ -30,5 +30,5 @@ public:
         return "Impossible operation!";
     }
 };
-*/
+
 #endif // EXCEPTIONS_H
