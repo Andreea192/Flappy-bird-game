@@ -178,7 +178,7 @@ int main() {
                     std::cout << "Current score: " << gameManager->get_score() << std::endl;
                 }
             }
-            Spike<int>* spike = level.getSpike();
+            const Spike<int>* spike = level.getSpike();
             if (spike) {
                 spike->interact(bird, true);
             }
