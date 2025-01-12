@@ -62,31 +62,31 @@ endif()
 add_executable(${PROJECT_NAME}
     main.cpp
     generated/src/Helper.cpp
-    env_fixes.h
-        Bird.h
-        Bird.cpp
-        Obstacle.h
-        Obstacle.cpp
-        Level.h
-        Level.cpp
-        Menu.h
-        Menu.cpp
-        Pipe.h
-        FOREST.h
-        Pipe.cpp
-        FOREST.cpp
-        Spike.cpp
-        Spike.h
-        Exceptions.h
-        game.cpp
-        GameManager.h
-        Factory.h
-        GameManager.cpp
-        Factory.cpp
-        ObstacleFactory.h
-        Observer.h
-        Observer.cpp
-        GameManagerObserver.h
+    	sources/env_fixes.h
+        sources/Bird.h
+        sources/Bird.cpp
+        sources/Obstacle.h
+        sources/Obstacle.cpp
+        sources/Level.h
+        sources/Level.cpp
+        sources/Menu.h
+        sources/Menu.cpp
+        sources/Pipe.h
+        sources/FOREST.h
+        sources/Pipe.cpp
+        sources/FOREST.cpp
+        sources/Spike.cpp
+        sources/Spike.h
+        sources/Exceptions.h
+        sources/game.cpp
+        sources/GameManager.h
+        sources/Factory.h
+        sources/GameManager.cpp
+        sources/Factory.cpp
+        sources/ObstacleFactory.h
+        sources/Observer.h
+        sources/Observer.cpp
+        sources/GameManagerObserver.h
 )
 
 include(cmake/CompilerFlags.cmake)
