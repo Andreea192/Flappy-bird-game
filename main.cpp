@@ -52,16 +52,16 @@ char getch() {
 }
 #endif
 
-#include "Bird.h"
-#include "Exceptions.h"
-#include "Menu.h"
-#include "Level.h"
-#include "Pipe.h"
-#include "Spike.h"
-#include "FOREST.h"
-#include "Factory.h"
-#include "GameManager.h"
-#include "GameManagerObserver.h"
+#include "sources/Bird.h"
+#include "sources/Exceptions.h"
+#include "sources/Menu.h"
+#include "sources/Level.h"
+#include "sources/Pipe.h"
+#include "sources/Spike.h"
+#include "sources/FOREST.h"
+#include "sources/Factory.h"
+#include "sources/GameManager.h"
+#include "sources/GameManagerObserver.h"
 
 
 using Clock = std::chrono::steady_clock;
